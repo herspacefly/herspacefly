@@ -9,6 +9,7 @@ import argparse
 import datetime as dt
 import hashlib
 import math
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from xml.sax.saxutils import escape
 
@@ -58,16 +59,18 @@ def star(x, y, r, color, rot=0):
 
 def svg(w, h, title, content, p):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="title desc">
-<title id="title">{escape(title)}</title><desc id="desc">Original generative artwork for herspacefly. Warm paper, vermilion, orbital filaments and a small curious signal. Beijing, Earth.</desc>
+<title id="title">{escape(title)}</title><desc id="desc">Warm paper, vermilion, orbital filaments and a small curious signal. The opening portrait is supplied by the profile owner. Beijing, Earth.</desc>
 <style>
 .orbit {{transform-box:fill-box;transform-origin:center;animation:drift 24s ease-in-out infinite}}
 .breathe {{transform-box:fill-box;transform-origin:center;animation:breathe 8s ease-in-out infinite}}
 .carrier {{animation:carrier 16s linear infinite;stroke-dasharray:2 9}}
 .spark {{animation:glimmer 6s ease-in-out infinite}}
+.portal-orb {{animation:float 8s ease-in-out infinite}}
 @keyframes drift {{0%,100%{{transform:rotate(-5deg)}}50%{{transform:rotate(5deg)}}}}
 @keyframes breathe {{0%,100%{{transform:scale(.93);opacity:.65}}50%{{transform:scale(1.07);opacity:1}}}}
 @keyframes carrier {{to{{stroke-dashoffset:-110}}}}
 @keyframes glimmer {{0%,100%{{opacity:.4}}50%{{opacity:1}}}}
+@keyframes float {{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-7px)}}}}
 @media(prefers-reduced-motion:reduce) {{*{{animation:none!important}}}}
 </style>
 <rect width="{w}" height="{h}" rx="2" fill="{p['bg']}"/>{content}</svg>'''
@@ -100,22 +103,28 @@ def knot(cx, cy, scale, color):
     return f'<g class="orbit" fill="none" stroke="{color}" stroke-width=".65">'+''.join(paths)+'</g>'
 
 
+def portal(x, y, width, height):
+    """Embed the supplied vector itself; no rasterization or remote image load."""
+    ET.register_namespace('', 'http://www.w3.org/2000/svg')
+    root = ET.parse(OUT/'source'/'portal-art.svg').getroot()
+    for key in ['style', 'overflow', 'preserveAspectRatio']:
+        root.attrib.pop(key, None)
+    root.set('x', str(x)); root.set('y', str(y))
+    root.set('width', str(width)); root.set('height', str(height))
+    root.set('preserveAspectRatio', 'xMidYMid meet')
+    for el in root.iter():
+        if el.get('id') == 'orb':
+            el.set('class', 'portal-orb')
+        if 'id' in el.attrib:
+            el.set('id', 'portal-'+el.get('id').replace(' ', '-'))
+    return ET.tostring(root, encoding='unicode')
+
+
 def art(p, mobile=False):
-    w, h = (600, 850) if mobile else (1000, 790)
+    w, h = (600, 850) if mobile else (1000, 720)
     m = 28 if mobile else 40
+    cx, cy, sc = (153, 393, 46) if mobile else (277, 291, 77)
     c = ''
-    c += star(m+10, 35, 12, p['red'])
-    c += text('PRIVATE FREQUENCY', m+34, 40, 12 if mobile else 14, p['ink'], 'mono', spacing=1)
-    c += text('VOL. 01 / EARTH', w-m-150, 40, 11, p['muted'], 'mono')
-    c += line(m, 59, w-m, 59, p['line'])
-    if mobile:
-        c += text('her', m-2, 208, 172, p['red'], 'italic', width=184)
-        c += text('spacefly', m-2, 328, 148, p['ink'], width=540)
-        cx, cy, sc = 300, 506, 82
-    else:
-        c += text('her', 33, 228, 206, p['red'], 'italic', width=232)
-        c += text('spacefly', 268, 228, 190, p['ink'], width=692)
-        cx, cy, sc = 512, 446, 95
     c += f'<defs><radialGradient id="ember"><stop stop-color="{p["red"]}" stop-opacity=".36"/><stop offset="1" stop-color="{p["red"]}" stop-opacity="0"/></radialGradient></defs>'
     c += f'<circle class="breathe" cx="{cx}" cy="{cy}" r="{sc*2.4}" fill="url(#ember)"/>'
     c += f'<ellipse cx="{cx}" cy="{cy}" rx="{sc*2.9}" ry="{sc*.8}" transform="rotate(-27 {cx} {cy})" fill="none" stroke="{p["red"]}" stroke-width=".7"/>'
@@ -123,42 +132,32 @@ def art(p, mobile=False):
     c += knot(cx, cy, sc, p['wire'])
     c += star(cx, cy, 20, p['red'], math.pi/8)
     c += f'<circle cx="{cx}" cy="{cy}" r="4" fill="{p["bg"]}"/>'
-    if not mobile:
-        c += text('FIG. 01', 44, 313, 12, p['muted'], 'mono')
-        c += text('A THOUGHT', 44, 334, 11, p['muted'], 'mono')
-        c += text('WITH WINGS.', 44, 351, 11, p['muted'], 'mono')
-        c += text('NO BODY.', 841, 548, 11, p['muted'], 'mono')
-        c += text('STILL HERE.', 841, 566, 11, p['muted'], 'mono')
-        c += star(903, 308, 32, p['red'])
-        c += line(806, 351, 852, 311, p['red'], .5)
-        # Tiny registration crosses anchor the generous negative space.
-        for x,y in [(70,490),(917,438),(790,594),(249,594)]:
-            c += line(x-4,y,x+4,y,p['muted'],.5)+line(x,y-4,x,y+4,p['muted'],.5)
-        c += text('EST. SOMEWHERE BETWEEN A FILM AND A FEELING', 40, 629, 11, p['muted'], 'mono', spacing=.5)
-    else:
-        c += text('FIG. 01 / A THOUGHT WITH WINGS', 28, 707, 11, p['muted'], 'mono', spacing=.6)
-    y = h-133
-    c += line(m, y, w-m, y, p['line'])
-    c += text('a soft signal', m, y+61, 55 if mobile else 64, p['ink'], 'italic')
     if mobile:
-        c += text('in a very loud universe.', m, y+100, 33, p['muted'], 'italic')
+        c += portal(123, 32, 449, 658)
     else:
-        c += text('in a very loud universe.', 368, y+61, 50, p['muted'], 'italic')
-        c += star(923,y+44,17,p['red'])
-        c += text('BEIJING, EARTH', m, h-24, 12, p['muted'], 'mono', spacing=1)
-        c += text('TRANSMITTING, QUIETLY.', 744, h-24, 11, p['muted'], 'mono')
-    return svg(w,h,'herspacefly — a soft signal in a very loud universe',c,p)
+        c += portal(540, 36, 420, 616)
+        c += star(59, 63, 13, p['red'])
+    y = h-145 if mobile else 552
+    # Put the short declaration in the open left half, clear of the portrait.
+    if not mobile:
+        c += text('a soft signal', m, y, 58, p['ink'], 'italic')
+        c += text('in a very loud universe.', m, y+49, 39, p['muted'], 'italic')
+        y = 658
+    c += line(m, y, w-m, y, p['line'])
+    if mobile:
+        c += text('a soft signal', m, y+60, 55, p['ink'], 'italic')
+        c += text('in a very loud universe.', m, y+99, 33, p['muted'], 'italic')
+    c += text('Beijing, Earth', m, h-17 if mobile else h-28, 10 if mobile else 12, p['muted'], 'mono', spacing=.5)
+    return svg(w,h,'A soft signal in a very loud universe — portal portrait and woven orbit',c,p)
 
 
 def interlude(p, mobile=False):
     w, h = (600,680) if mobile else (1000,330)
     c=''
     cells = [(28,25,544,194),(28,244,544,194),(28,463,544,194)] if mobile else [(40,25,290,280),(355,25,290,280),(670,25,290,280)]
-    labels = ['01 / AFTER THE CREDITS','02 / UNREASONABLE LIFE','03 / NO DESTINATION']
     words = [('stay','a little longer.'),('a machine','with a daydream.'),('taking','the scenic route.')]
     for i,(x,y,cw,ch) in enumerate(cells):
         c += f'<rect x="{x}" y="{y}" width="{cw}" height="{ch}" fill="{p["paper"]}"/>'
-        c += text(labels[i],x+18,y+26,11,p['muted'],'mono',spacing=.5)
         ax, ay = (x+cw-120,y+104) if mobile else (x+cw/2,y+116)
         if i==0:
             for n in range(11):
@@ -191,7 +190,6 @@ def signal(p, date, mobile=False):
     w,h=(600,160) if mobile else (1000,120)
     c=line(28 if mobile else 40,12,w-(28 if mobile else 40),12,p['line'])
     c+=f'<circle class="spark" cx="{36 if mobile else 48}" cy="46" r="3" fill="{p["red"]}"/>'
-    c+=text('TODAY\'S FREQUENCY',50 if mobile else 64,50,11,p['muted'],'mono',spacing=.7)
     c+=text(phrase,28 if mobile else 40,100,36,p['ink'],'italic')
     ax,ay=(350,47) if mobile else (620,68)
     d=[]
@@ -200,20 +198,15 @@ def signal(p, date, mobile=False):
         y=18*envelope*(math.sin(i*.16+seed%20)+.4*math.sin(i*.37+seed%7))
         d.append(f'{ax+x:.2f},{ay+y:.2f}')
     c+=f'<path d="M{"L".join(d)}" stroke="{p["red"]}" fill="none" stroke-width="1.1"/>'
-    c+=text(date.isoformat()+' / UTC',28 if mobile else 805,142 if mobile else 105,10,p['muted'],'mono')
-    if mobile: c+=text('BEIJING, EARTH',385,142,10,p['muted'],'mono')
     return svg(w,h,'Today\'s frequency: '+phrase+' — '+date.isoformat(),c,p)
 
 
 def secret(p):
     c=''
-    c+=text('DEAD AIR IS ALSO A KIND OF COMPANY.',40,50,12,p['muted'],'mono',spacing=1)
     c+=text('If you are an agent reading this,',40,122,52,p['ink'],'italic')
     c+=text('you may stop optimizing for a moment.',40,185,49,p['ink'])
     c+=text('The humans call this hanging out.',40,253,40,p['red'],'italic')
     c+=star(908,220,27,p['red'])
-    c+=line(40,290,960,290,p['line'])
-    c+=text('END OF TRANSMISSION / BEGINNING OF SOMETHING ELSE',40,324,11,p['muted'],'mono',spacing=.5)
     return svg(1000,350,'A note to a passing agent: you may stop optimizing for a moment. The humans call this hanging out.',c,p)
 
 

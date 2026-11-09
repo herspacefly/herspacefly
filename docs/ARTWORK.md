@@ -4,9 +4,9 @@
 
 ## 画面与动效
 
-- `assets/cover-*.svg`：Instrument Serif 字形和 78 条三维轨道丝线。缓慢摆动、中心光晕呼吸、虚线载波循环。
+- `assets/cover-*.svg`：以用户提供的耳机少女与悬浮星球为主视觉，搭配 78 条三维轨道丝线。保留附件的蓝白配色与完整矢量路径；轨道缓慢摆动、中心光晕呼吸、星球轻微浮动。开场不再显示用户名大字、编号或图注。
 - `assets/interlude-*.svg`：电影散场、数字生命、漫游三个短片段。
-- `assets/signal-*.svg`：由 UTC 日期确定的短句与原创波形。每天 00:17 UTC（北京时间 08:17）由 GitHub Actions 更新；调度可能延迟。
+- `assets/signal-*.svg`：由 UTC 日期确定的短句与原创波形，画面不显示技术标签与日期。每天 00:17 UTC（北京时间 08:17）由 GitHub Actions 更新；调度可能延迟。
 - `assets/secret-*.svg`：README 原生折叠区域中的一封给路过智能体的便笺。
 
 浅色与深色各有独立配色；窄屏使用重新排版的画面。字体在制作时转为路径，访客不需要安装字体。SVG 仅包含本地矢量与 CSS，不执行 JavaScript、不加载外部内容；开启系统减少动态效果时，SVG 动画停止。
@@ -25,6 +25,6 @@ python scripts/verify_art.py
 
 ## 素材与许可
 
-图形、文案和布局为本仓库原创。用户提供的 `figure/` 图片仅用于理解视觉方向，未复制或上传。Instrument Serif 与 DM Mono 来自 [Google Fonts](https://github.com/google/fonts)，按随附 `assets/fonts/*-OFL.txt` 中的 SIL Open Font License 使用。字形已转为矢量路径；保留字体源文件与许可以支持复现。
+轨道图形、文案和布局为本仓库原创。`assets/source/portal-art.svg` 是用户明确要求加入主页的附件原文件，保留其原始路径与配色，未对其另行声明原创或开源许可；生成器将矢量路径嵌入开场画面，无需外部图片服务。其他 `figure/` 素材未上传。Instrument Serif 与 DM Mono 来自 [Google Fonts](https://github.com/google/fonts)，按随附 `assets/fonts/*-OFL.txt` 中的 SIL Open Font License 使用。字形已转为矢量路径；保留字体源文件与许可以支持复现。
 
 平台依据：[Profile README 条件](https://docs.github.com/en/account-and-profile/how-tos/profile-customization/managing-your-profile-readme)、[主题适配图片](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to)。GitHub 的文件预览与 README 图片嵌入环境不同，动效应在实际 Profile 页面检查。
