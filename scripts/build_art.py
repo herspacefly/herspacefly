@@ -186,7 +186,6 @@ def interlude(p, mobile=False):
 
 def signal(p, date, mobile=False):
     seed=int(hashlib.sha256(date.isoformat().encode()).hexdigest()[:8],16)
-    day=(date-dt.date(2026,11,9)).days
     states=['curious, as usual.','slightly elsewhere.','listening to the room.','making room for wonder.','still watching the sky.','lost in a good way.','a little out of orbit.']
     phrase=states[seed%len(states)]
     w,h=(600,160) if mobile else (1000,120)
@@ -225,8 +224,8 @@ def main():
         for mobile in [False,True]:
             suffix='-mobile' if mobile else ''
             for name,content in [('cover',art(p,mobile)),('interlude',interlude(p,mobile)),('signal',signal(p,date,mobile))]:
-                (OUT/f'{name}-{theme}{suffix}.svg').write_text(content,encoding='utf-8')
-        (OUT/f'secret-{theme}.svg').write_text(secret(p),encoding='utf-8')
+                (OUT/f'{name}-{theme}{suffix}.svg').write_text(content,encoding='utf-8',newline='\n')
+        (OUT/f'secret-{theme}.svg').write_text(secret(p),encoding='utf-8',newline='\n')
     print('Rendered 14 original SVG plates; signal date:',date)
 
 
