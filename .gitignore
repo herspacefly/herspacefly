@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+figure/
+preview-*
+contact-sheet.jpg
+.art-check/
