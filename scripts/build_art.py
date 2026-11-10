@@ -168,37 +168,39 @@ def art(p, mobile=False):
 
 
 def interlude(p, mobile=False):
-    w, h = (600, 1412) if mobile else (1000, 1091)
-    # A compact cabinet: ten complete prints in staggered two/three-column layouts.
+    w, h = (600, 1412) if mobile else (1000, 1110)
+    # A compact cabinet: ten tilted prints with deliberate edge occlusion.
     # Committed display copies keep the self-contained image inexpensive to load.
     prints = [
-        ('mission-header.webp', 28, 24, 266, 266),
-        ('feature-search.webp', 28, 304, 266, 222),
-        ('feature-sandbox.webp', 28, 540, 266, 338),
-        ('hero.webp', 28, 892, 266, 287),
-        ('default.webp', 28, 1193, 266, 150),
-        ('mission-duo-1.webp', 306, 24, 266, 333),
-        ('feature-delegate.webp', 306, 371, 266, 266),
-        ('footer-field.webp', 306, 651, 266, 173),
-        ('platform-art.webp', 306, 838, 266, 266),
-        ('footer.webp', 306, 1118, 266, 266),
+        ('mission-header.webp', 28, 24, 282, 282, -1.2),
+        ('mission-duo-1.webp', 286, 38, 286, 358, 1.1),
+        ('feature-search.webp', 20, 288, 292, 244, 1.4),
+        ('feature-delegate.webp', 282, 378, 290, 290, -1.0),
+        ('feature-sandbox.webp', 28, 514, 284, 361, -1.2),
+        ('footer-field.webp', 276, 646, 296, 192, 1.4),
+        ('hero.webp', 22, 854, 288, 310, 1.0),
+        ('platform-art.webp', 284, 820, 288, 288, -1.3),
+        ('footer.webp', 280, 1090, 292, 292, 1.4),
+        ('default.webp', 28, 1145, 302, 170, -1.5),
     ] if mobile else [
-        ('mission-header.webp', 28, 28, 300, 300),
-        ('feature-search.webp', 28, 344, 300, 251),
-        ('feature-sandbox.webp', 28, 611, 300, 381),
-        ('hero.webp', 350, 28, 300, 323),
-        ('footer-field.webp', 341, 367, 318, 207),
-        ('platform-art.webp', 350, 590, 300, 300),
-        ('default.webp', 350, 906, 300, 169),
-        ('mission-duo-1.webp', 672, 28, 300, 375),
-        ('feature-delegate.webp', 672, 419, 300, 300),
-        ('footer.webp', 672, 735, 300, 300),
+        ('mission-header.webp', 32, 28, 318, 318, -1.3),
+        ('hero.webp', 328, 54, 324, 349, 1.0),
+        ('mission-duo-1.webp', 640, 22, 324, 405, -1.0),
+        ('feature-search.webp', 24, 324, 310, 259, 1.4),
+        ('footer-field.webp', 310, 380, 366, 237, -1.8),
+        ('feature-delegate.webp', 654, 405, 306, 306, 1.2),
+        ('feature-sandbox.webp', 30, 559, 316, 402, -1.2),
+        ('platform-art.webp', 328, 595, 320, 320, 1.6),
+        ('footer.webp', 632, 695, 332, 332, -1.4),
+        ('default.webp', 314, 890, 338, 190, -1.2),
     ]
-    c = ''
-    for name, x, y, pw, ph in prints:
+    c = '<defs><filter id="paper-shadow" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#000" flood-opacity=".24"/></filter></defs>'
+    for name, x, y, pw, ph, angle in prints:
+        c += f'<g transform="rotate({angle} {x+pw/2} {y+ph/2})" filter="url(#paper-shadow)">'
         c += f'<rect x="{x-3}" y="{y-3}" width="{pw+6}" height="{ph+6}" fill="{p["paper"]}"/>'
         c += raster(name, x, y, pw, ph)
-    return svg(w,h,'A dense cabinet of ten digital dreams, engravings, winged figures and floating light',c,p)
+        c += '</g>'
+    return svg(w,h,'Ten overlapping art prints: tilted digital dreams, engravings, winged figures and floating light',c,p)
 
 
 def signal(p, date, mobile=False):

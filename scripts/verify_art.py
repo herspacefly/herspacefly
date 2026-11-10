@@ -40,7 +40,7 @@ readme=(ROOT/'README.md').read_text(encoding='utf-8')
 links=re.findall(r'(?:src|srcset)="([^"]+)"',readme)
 for link in links:
     assert not link.startswith(('http:', 'https:')), f'Unexpected remote asset: {link}'
-    assert (ROOT/link).is_file(), f'Missing README image: {link}'
+    assert (ROOT/link.split('?', 1)[0]).is_file(), f'Missing README image: {link}'
 assert len(links) == 14, f'Unexpected image reference count: {len(links)}'
 source = ET.parse(ROOT/'assets/source/portal-art.svg').getroot()
 source_paths = [el.get('d') for el in source.iter(ns+'path')]
