@@ -9,6 +9,7 @@ on:
       - 'scripts/**'
       - 'assets/fonts/**'
       - 'assets/source/**'
+      - 'assets/display/**'
       - 'requirements.txt'
       - 'README.md'
       - '.github/workflows/frequency.yml'

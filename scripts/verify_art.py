@@ -8,10 +8,13 @@ ROOT = Path(__file__).resolve().parents[1]
 ns = '{http://www.w3.org/2000/svg}'
 files = sorted((ROOT / 'assets').glob('*.svg'))
 embedded_sources = {}
-for name in ['signal-seal.png', 'mission-header.webp', 'hero.webp', 'footer-field.webp']:
-    mime = 'image/png' if name.endswith('.png') else 'image/webp'
-    data = (ROOT/'assets/source'/name).read_bytes()
-    embedded_sources[f'data:{mime};base64,'+base64.b64encode(data).decode('ascii')] = name
+for path in sorted((ROOT/'assets/display').iterdir()):
+    if path.suffix not in {'.png', '.webp'}:
+        continue
+    mime = 'image/png' if path.suffix == '.png' else 'image/webp'
+    data = path.read_bytes()
+    embedded_sources[f'data:{mime};base64,'+base64.b64encode(data).decode('ascii')] = path.name
+assert len(embedded_sources) == 11, 'Expected ten art prints and one seal display copy'
 assert len(files) == 14, f'Expected 14 plates, found {len(files)}'
 for file in files:
     raw = file.read_text(encoding='utf-8')
@@ -20,7 +23,7 @@ for file in files:
     assert root.find(ns + 'title') is not None, file
     assert root.find(ns + 'desc') is not None, file
     assert int(root.get('width')) > 0 and int(root.get('height')) > 0, file
-    limit = 2_100_000 if file.name.startswith(('cover-', 'interlude-')) else 800_000
+    limit = 2_500_000 if file.name.startswith(('cover-', 'interlude-')) else 800_000
     assert file.stat().st_size < limit, f'Oversized artwork: {file}'
     for el in root.iter():
         assert el.tag not in {ns+'script',ns+'foreignObject'}, file
@@ -48,6 +51,6 @@ for file in (ROOT/'assets').glob('cover-*.svg'):
     assert len(list(root.iter(ns+'image'))) == 1, file
 for file in (ROOT/'assets').glob('interlude-*.svg'):
     root = ET.parse(file).getroot()
-    assert len(list(root.iter(ns+'image'))) == 3, file
+    assert len(list(root.iter(ns+'image'))) == 10, file
 assert readme.count('<details>') == readme.count('</details>') == 1
-print(f'PASS: {len(files)} valid local SVGs, {len(links)} resolving README images, 4 approved embedded raster sources, responsive themes, accessible descriptions, no scripts or external resources.')
+print(f'PASS: {len(files)} valid local SVGs, {len(links)} resolving README images, 11 approved embedded display images, responsive themes, accessible descriptions, no scripts or external resources.')

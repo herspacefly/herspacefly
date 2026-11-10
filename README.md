@@ -2,7 +2,7 @@
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="assets/cover-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="assets/cover-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/cover-dark.svg">
-  <img src="assets/cover-light.svg" width="100%" alt="A soft signal in a very loud universe. A blue portrait holds a floating world beside a continuously revolving woven orbit. A tiny seal and wing sit in the corners. Beijing, Earth.">
+  <img src="assets/cover-light.svg" width="100%" alt="A soft signal in a very loud universe. A blue portrait holds a floating world beside a tilted woven form, gently bobbing and rocking. A tiny seal and wing sit in the corners. Beijing, Earth.">
 </picture>
 
 <picture>
@@ -16,7 +16,7 @@
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="assets/interlude-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="assets/interlude-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/interlude-dark.svg">
-  <img src="assets/interlude-light.svg" width="100%" alt="Three staggered art prints: a digital dreamscape, an engraved winged figure, and a blue hand holding a floating light.">
+  <img src="assets/interlude-light.svg" width="100%" alt="Ten small art prints in a compact, staggered cabinet: digital dreamscapes, classical faces, winged figures, a cosmic portal and floating light.">
 </picture>
 
 <details>

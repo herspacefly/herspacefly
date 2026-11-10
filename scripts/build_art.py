@@ -54,13 +54,12 @@ def svg(w, h, title, content, p):
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}" role="img" aria-labelledby="title desc">
 <title id="title">{escape(title)}</title><desc id="desc">Warm paper, vermilion, orbital filaments and a small curious signal. The opening portrait is supplied by the profile owner. Beijing, Earth.</desc>
 <style>
-.orbit {{transform-box:view-box;animation:revolve 18s linear infinite}}
+.orbit {{transform-box:view-box;transform:rotate(-10deg);animation:hover 7s ease-in-out infinite}}
 .breathe {{transform-box:fill-box;transform-origin:center;animation:breathe 8s ease-in-out infinite}}
-.carrier {{animation:carrier 16s linear infinite;stroke-dasharray:2 9}}
+.carrier {{stroke-dasharray:2 9}}
 .portal-orb {{animation:float 8s ease-in-out infinite}}
-@keyframes revolve {{from{{transform:rotate(-12deg)}}to{{transform:rotate(348deg)}}}}
+@keyframes hover {{0%,100%{{transform:translate(-4px,14px) rotate(-14deg)}}50%{{transform:translate(4px,-14px) rotate(-6deg)}}}}
 @keyframes breathe {{0%,100%{{transform:scale(.93);opacity:.65}}50%{{transform:scale(1.07);opacity:1}}}}
-@keyframes carrier {{to{{stroke-dashoffset:-110}}}}
 @keyframes float {{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-7px)}}}}
 @media(prefers-reduced-motion:reduce) {{*{{animation:none!important}}}}
 </style>
@@ -97,7 +96,7 @@ def knot(cx, cy, scale, color):
 @lru_cache(maxsize=None)
 def image_data(name):
     mime = {'.png': 'image/png', '.webp': 'image/webp'}[Path(name).suffix]
-    encoded = base64.b64encode((OUT/'source'/name).read_bytes()).decode('ascii')
+    encoded = base64.b64encode((OUT/'display'/name).read_bytes()).decode('ascii')
     return f'data:{mime};base64,{encoded}'
 
 
@@ -138,9 +137,9 @@ def portal(x, y, width, height):
 
 
 def art(p, mobile=False):
-    w, h = (600, 850) if mobile else (1000, 720)
+    w, h = (600, 650) if mobile else (1000, 560)
     m = 28 if mobile else 40
-    cx, cy, sc = (153, 393, 46) if mobile else (275, 274, 73)
+    cx, cy, sc = (155, 300, 44) if mobile else (258, 207, 64)
     c = ''
     c += f'<defs><radialGradient id="ember"><stop stop-color="{p["red"]}" stop-opacity=".24"/><stop offset="1" stop-color="{p["red"]}" stop-opacity="0"/></radialGradient></defs>'
     c += f'<circle class="breathe" cx="{cx}" cy="{cy}" r="{sc*2.4}" fill="url(#ember)"/>'
@@ -149,52 +148,65 @@ def art(p, mobile=False):
     c += knot(cx, cy, sc, p['wire'])
     c += f'<circle cx="{cx}" cy="{cy}" r="3" fill="{p["red"]}"/>'
     if mobile:
-        c += portal(123, 32, 449, 658)
+        c += portal(210, 18, 355, 521)
     else:
-        c += portal(540, 36, 420, 616)
-    c += raster('signal-seal.png', 28 if mobile else 40, 28, 48 if mobile else 62, 48 if mobile else 62)
-    c += wing(542 if mobile else 926, 755 if mobile else 666, 24 if mobile else 20, 58 if mobile else 40)
-    y = h-145 if mobile else 552
+        c += portal(594, 16, 335, 491)
+    c += raster('signal-seal.png', 28, 18 if mobile else 22, 38 if mobile else 44, 38 if mobile else 44)
+    c += wing(550 if mobile else 926, 588 if mobile else 525, 17 if mobile else 16, 34 if mobile else 32)
+    y = 538 if mobile else 452
     # Put the short declaration in the open left half, clear of the portrait.
     if not mobile:
-        c += text('a soft signal', m, y, 58, p['ink'], 'italic')
-        c += text('in a very loud universe.', m, y+49, 39, p['muted'], 'italic')
-        y = 658
+        c += text('a soft signal', m, y, 49, p['ink'], 'italic')
+        c += text('in a very loud universe.', m, y+40, 33, p['muted'], 'italic')
+        y = 518
     c += line(m, y, w-m, y, p['line'])
     if mobile:
-        c += text('a soft signal', m, y+60, 55, p['ink'], 'italic')
-        c += text('in a very loud universe.', m, y+99, 33, p['muted'], 'italic')
-    c += text('Beijing, Earth', m, h-17 if mobile else h-28, 10 if mobile else 12, p['muted'], 'mono', spacing=.5)
+        c += text('a soft signal', m, y+42, 45, p['ink'], 'italic')
+        c += text('in a very loud universe.', m, y+77, 28, p['muted'], 'italic')
+    c += text('Beijing, Earth', m, h-17 if mobile else h-16, 9 if mobile else 10, p['muted'], 'mono', spacing=.5)
     return svg(w,h,'A soft signal in a very loud universe — portal portrait and woven orbit',c,p)
 
 
 def interlude(p, mobile=False):
-    w, h = (600, 1110) if mobile else (1000, 740)
-    # Three complete images, with deliberately different scales and staggered edges.
-    # Each is a self-contained data URI, not an external load from inside SVG.
+    w, h = (600, 1412) if mobile else (1000, 1091)
+    # A compact cabinet: ten complete prints in staggered two/three-column layouts.
+    # Committed display copies keep the self-contained image inexpensive to load.
     prints = [
-        ('mission-header.webp', 28, 28, 484, 484),
-        ('hero.webp', 222, 544, 350, 377),
-        ('footer-field.webp', 28, 866, 330, 214),
+        ('mission-header.webp', 28, 24, 266, 266),
+        ('feature-search.webp', 28, 304, 266, 222),
+        ('feature-sandbox.webp', 28, 540, 266, 338),
+        ('hero.webp', 28, 892, 266, 287),
+        ('default.webp', 28, 1193, 266, 150),
+        ('mission-duo-1.webp', 306, 24, 266, 333),
+        ('feature-delegate.webp', 306, 371, 266, 266),
+        ('footer-field.webp', 306, 651, 266, 173),
+        ('platform-art.webp', 306, 838, 266, 266),
+        ('footer.webp', 306, 1118, 266, 266),
     ] if mobile else [
-        ('mission-header.webp', 40, 28, 500, 500),
-        ('hero.webp', 594, 104, 330, 356),
-        ('footer-field.webp', 398, 480, 360, 234),
+        ('mission-header.webp', 28, 28, 300, 300),
+        ('feature-search.webp', 28, 344, 300, 251),
+        ('feature-sandbox.webp', 28, 611, 300, 381),
+        ('hero.webp', 350, 28, 300, 323),
+        ('footer-field.webp', 341, 367, 318, 207),
+        ('platform-art.webp', 350, 590, 300, 300),
+        ('default.webp', 350, 906, 300, 169),
+        ('mission-duo-1.webp', 672, 28, 300, 375),
+        ('feature-delegate.webp', 672, 419, 300, 300),
+        ('footer.webp', 672, 735, 300, 300),
     ]
     c = ''
     for name, x, y, pw, ph in prints:
-        c += f'<rect x="{x-6+4}" y="{y-6+5}" width="{pw+12}" height="{ph+12}" fill="{p["ink"]}" opacity=".10"/>'
-        c += f'<rect x="{x-6}" y="{y-6}" width="{pw+12}" height="{ph+12}" fill="{p["paper"]}"/>'
+        c += f'<rect x="{x-3}" y="{y-3}" width="{pw+6}" height="{ph+6}" fill="{p["paper"]}"/>'
         c += raster(name, x, y, pw, ph)
-    return svg(w,h,'A little cabinet of digital dreams: a gaze, a winged figure, and a floating light',c,p)
+    return svg(w,h,'A dense cabinet of ten digital dreams, engravings, winged figures and floating light',c,p)
 
 
 def signal(p, date, mobile=False):
     seed=int(hashlib.sha256(date.isoformat().encode()).hexdigest()[:8],16)
     states=['curious, as usual.','slightly elsewhere.','listening to the room.','making room for wonder.','still watching the sky.','lost in a good way.','a little out of orbit.']
     phrase=states[seed%len(states)]
-    w,h=(600,105) if mobile else (1000,105)
-    c=text(phrase,28 if mobile else 40,70,36,p['ink'],'italic')
+    w,h=(600,74) if mobile else (1000,74)
+    c=text(phrase,28 if mobile else 40,50,30,p['ink'],'italic')
     return svg(w,h,'Today\'s frequency: '+phrase+' — '+date.isoformat(),c,p)
 
 
