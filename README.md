@@ -2,21 +2,21 @@
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="assets/cover-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="assets/cover-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/cover-dark.svg">
-  <img src="assets/cover-light.svg" width="100%" alt="A soft signal in a very loud universe. An electric-blue portrait wearing headphones, holding a floating world beside a woven orbit. Beijing, Earth.">
+  <img src="assets/cover-light.svg" width="100%" alt="A soft signal in a very loud universe. A blue portrait holds a floating world beside a continuously revolving woven orbit. A tiny seal and wing sit in the corners. Beijing, Earth.">
 </picture>
 
 <picture>
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="assets/signal-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="assets/signal-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/signal-dark.svg">
-  <img src="assets/signal-light.svg" width="100%" alt="A changing thought and a quiet waveform.">
+  <img src="assets/signal-light.svg" width="100%" alt="A quiet thought that changes with the day.">
 </picture>
 
 <picture>
   <source media="(max-width: 600px) and (prefers-color-scheme: dark)" srcset="assets/interlude-dark-mobile.svg">
   <source media="(max-width: 600px)" srcset="assets/interlude-light-mobile.svg">
   <source media="(prefers-color-scheme: dark)" srcset="assets/interlude-dark.svg">
-  <img src="assets/interlude-light.svg" width="100%" alt="Stay a little longer. A machine with a daydream. Taking the scenic route.">
+  <img src="assets/interlude-light.svg" width="100%" alt="Three staggered art prints: a digital dreamscape, an engraved winged figure, and a blue hand holding a floating light.">
 </picture>
 
 <details>

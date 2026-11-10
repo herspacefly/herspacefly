@@ -4,12 +4,12 @@
 
 ## 画面与动效
 
-- `assets/cover-*.svg`：以用户提供的耳机少女与悬浮星球为主视觉，搭配 78 条三维轨道丝线。保留附件的蓝白配色与完整矢量路径；轨道缓慢摆动、中心光晕呼吸、星球轻微浮动。开场不再显示用户名大字、编号或图注。
-- `assets/interlude-*.svg`：电影散场、数字生命、漫游三个短片段。
-- `assets/signal-*.svg`：由 UTC 日期确定的短句与原创波形，画面不显示技术标签与日期。每天 00:17 UTC（北京时间 08:17）由 GitHub Actions 更新；调度可能延迟。
+- `assets/cover-*.svg`：以用户提供的耳机少女与悬浮星球为主视觉，搭配 78 条三维轨道丝线。线织环每 18 秒连续旋转一周，取代原来 24 秒内只摆动正负 5 度的动效；中心光晕呼吸、星球轻微浮动。`下载.png` 的小印章与 `hermes-wing.svg` 的翼形符号分置边角。开场不显示用户名大字、编号或图注。
+- `assets/interlude-*.svg`：用 `mission-header.webp`、`hero.webp` 与 `footer-field.webp` 三幅图组成错位叠放的拼贴，替换原来的三张几何卡片。桌面与手机采用不同构图，完整保留各原图的比例与色彩。
+- `assets/signal-*.svg`：由 UTC 日期确定的短句，不再加入原来的波形装饰，也不显示技术标签与日期。每天 00:17 UTC（北京时间 08:17）由 GitHub Actions 更新；调度可能延迟。
 - `assets/secret-*.svg`：README 原生折叠区域中的一封给路过智能体的便笺。
 
-浅色与深色各有独立配色；窄屏使用重新排版的画面。字体在制作时转为路径，访客不需要安装字体。SVG 仅包含本地矢量与 CSS，不执行 JavaScript、不加载外部内容；开启系统减少动态效果时，SVG 动画停止。
+浅色与深色各有独立配色；窄屏使用重新排版的画面。字体在制作时转为路径，访客不需要安装字体。SVG 包含本地矢量、CSS 与内嵌的原图数据，不执行 JavaScript、不从 SVG 内部请求外部内容；开启系统减少动态效果时，SVG 动画停止。浏览器的 SVG 图片环境允许内嵌 `data:` 图片，依据见 [MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Guides/SVG_as_an_image#restrictions)。
 
 ## 重新制作
 
@@ -25,6 +25,6 @@ python scripts/verify_art.py
 
 ## 素材与许可
 
-轨道图形、文案和布局为本仓库原创。`assets/source/portal-art.svg` 是用户明确要求加入主页的附件原文件，保留其原始路径与配色，未对其另行声明原创或开源许可；生成器将矢量路径嵌入开场画面，无需外部图片服务。其他 `figure/` 素材未上传。Instrument Serif 与 DM Mono 来自 [Google Fonts](https://github.com/google/fonts)，按随附 `assets/fonts/*-OFL.txt` 中的 SIL Open Font License 使用。字形已转为矢量路径；保留字体源文件与许可以支持复现。
+轨道图形、文案和布局为本仓库原创。用户授权使用的素材原文件保存在 `assets/source/`：`portal-art.svg`、`hermes-wing.svg`、`signal-seal.png`（原 `下载.png`）、`mission-header.webp`、`hero.webp`、`footer-field.webp`。保留这些文件的原始字节，不对其另行声明原创或开源许可。矢量路径与原图数据嵌入输出 SVG，无需外部图片服务；其余 `figure/` 素材未上传。Instrument Serif 与 DM Mono 来自 [Google Fonts](https://github.com/google/fonts)，按随附 `assets/fonts/*-OFL.txt` 中的 SIL Open Font License 使用。字形已转为矢量路径；保留字体源文件与许可以支持复现。
 
 平台依据：[Profile README 条件](https://docs.github.com/en/account-and-profile/how-tos/profile-customization/managing-your-profile-readme)、[主题适配图片](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax#specifying-the-theme-an-image-is-shown-to)。GitHub 的文件预览与 README 图片嵌入环境不同，动效应在实际 Profile 页面检查。

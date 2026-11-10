@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/**'
       - 'assets/fonts/**'
+      - 'assets/source/**'
       - 'requirements.txt'
       - 'README.md'
       - '.github/workflows/frequency.yml'
