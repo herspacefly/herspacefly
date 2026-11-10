@@ -160,8 +160,8 @@ def art(p, mobile=False):
 
 
 def interlude(p, mobile=False):
-    w, h = (600, 1285) if mobile else (1000, 750)
-    # A compact cabinet: ten tilted prints with deliberate edge occlusion.
+    w, h = (600, 1360) if mobile else (1000, 750)
+    # A compact cabinet: eleven tilted prints with deliberate edge occlusion.
     # Committed display copies keep the self-contained image inexpensive to load.
     prints = [
         ('mission-header.webp', 28, 24, 282, 282, -1.2),
@@ -174,6 +174,7 @@ def interlude(p, mobile=False):
         ('platform-art.webp', 284, 820, 288, 288, -1.3),
         ('footer.webp', 280, 1090, 292, 292, 1.4),
         ('default.webp', 28, 1145, 302, 170, -1.5),
+        ('mission-duo-2.webp', 360, 1275, 222, 196, 1.0),
     ] if mobile else [
         ('mission-header.webp', 30, 28, 250, 250, -1.3),
         ('hero.webp', 265, 48, 250, 269, 1.0),
@@ -185,6 +186,7 @@ def interlude(p, mobile=False):
         ('platform-art.webp', 263, 458, 265, 265, 1.6),
         ('footer.webp', 738, 322, 236, 236, -1.4),
         ('default.webp', 515, 552, 270, 152, -1.2),
+        ('mission-duo-2.webp', 758, 538, 220, 194, 1.0),
     ]
     if mobile:
         prints = [(name, 30+x*.9, 10+y*.9, pw*.9, ph*.9, angle) for name,x,y,pw,ph,angle in prints]
@@ -195,10 +197,10 @@ def interlude(p, mobile=False):
         c += raster(name, x, y, pw, ph)
         c += '</g>'
     # A condensed, slightly dry signature in the pocket below the left prints.
-    x, y, size, width, leading = (58.8, 1232.2, 44.1, 184.5, 36.9) if mobile else (36, 555, 65, 175, 54)
+    x, y, size, width, leading = (58.8, 1260, 44.1, 184.5, 36.9) if mobile else (36, 575, 65, 175, 54)
     c += text('HUMAN,', x, y, size, p['ink'], 'display', width=width)
     c += text('MOSTLY.', x, y+leading, size, p['ink'], 'display', width=width)
-    return svg(w,h,'Ten overlapping art prints: tilted digital dreams, engravings, winged figures and floating light',c,p)
+    return svg(w,h,'Eleven overlapping art prints: tilted digital dreams, engravings, winged figures and floating light',c,p)
 
 
 def signal(p, date, mobile=False):
