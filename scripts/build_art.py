@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets'
 TAU = math.tau
 FONTS = {}
-for key, name in [('serif', 'InstrumentSerif-Regular.ttf'), ('italic', 'InstrumentSerif-Italic.ttf'), ('mono', 'DMMono-Regular.ttf'), ('display', 'BebasNeue-Regular.ttf')]:
+for key, name in [('serif', 'Barlow-Regular.ttf'), ('italic', 'EBGaramond-Italic.ttf'), ('mono', 'DMMono-Regular.ttf'), ('display', 'BebasNeue-Regular.ttf')]:
     f = TTFont(OUT / 'fonts' / name)
     FONTS[key] = (f, f.getGlyphSet(), f.getBestCmap(), f['head'].unitsPerEm)
 
@@ -55,11 +55,8 @@ def svg(w, h, title, content, p):
 <title id="title">{escape(title)}</title><desc id="desc">Warm paper, vermilion, orbital filaments and a small curious signal. The opening portrait is supplied by the profile owner. Beijing, Earth.</desc>
 <style>
 .orbit {{transform-box:view-box;transform:rotate(-10deg);animation:hover 7s ease-in-out infinite}}
-.breathe {{transform-box:fill-box;transform-origin:center;animation:breathe 8s ease-in-out infinite}}
-.carrier {{stroke-dasharray:2 9}}
 .portal-orb {{animation:float 8s ease-in-out infinite}}
 @keyframes hover {{0%,100%{{transform:translate(-4px,14px) rotate(-14deg)}}50%{{transform:translate(4px,-14px) rotate(-6deg)}}}}
-@keyframes breathe {{0%,100%{{transform:scale(.93);opacity:.65}}50%{{transform:scale(1.07);opacity:1}}}}
 @keyframes float {{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-7px)}}}}
 @media(prefers-reduced-motion:reduce) {{*{{animation:none!important}}}}
 </style>
@@ -137,38 +134,33 @@ def portal(x, y, width, height):
 
 
 def art(p, mobile=False):
-    w, h = (600, 650) if mobile else (1000, 560)
+    w, h = (600, 600) if mobile else (1000, 510)
     m = 28 if mobile else 40
-    cx, cy, sc = (155, 300, 44) if mobile else (258, 207, 64)
+    cx, cy, sc = (150, 255, 38) if mobile else (240, 187, 57)
     c = ''
-    c += f'<defs><radialGradient id="ember"><stop stop-color="{p["red"]}" stop-opacity=".24"/><stop offset="1" stop-color="{p["red"]}" stop-opacity="0"/></radialGradient></defs>'
-    c += f'<circle class="breathe" cx="{cx}" cy="{cy}" r="{sc*2.4}" fill="url(#ember)"/>'
-    c += f'<ellipse cx="{cx}" cy="{cy}" rx="{sc*2.9}" ry="{sc*.8}" transform="rotate(-27 {cx} {cy})" fill="none" stroke="{p["red"]}" stroke-width=".7"/>'
-    c += f'<circle class="carrier" cx="{cx}" cy="{cy}" r="{sc*2.35}" fill="none" stroke="{p["line"]}" stroke-width=".8"/>'
     c += knot(cx, cy, sc, p['wire'])
-    c += f'<circle cx="{cx}" cy="{cy}" r="3" fill="{p["red"]}"/>'
     if mobile:
-        c += portal(210, 18, 355, 521)
+        c += portal(250, 20, 300, 440)
     else:
-        c += portal(594, 16, 335, 491)
-    c += raster('signal-seal.png', 28, 18 if mobile else 22, 38 if mobile else 44, 38 if mobile else 44)
-    c += wing(550 if mobile else 926, 588 if mobile else 525, 17 if mobile else 16, 34 if mobile else 32)
-    y = 538 if mobile else 452
+        c += portal(640, 16, 280, 410)
+    c += raster('signal-seal.png', 28, 18, 30 if mobile else 32, 30 if mobile else 32)
+    c += wing(550 if mobile else 935, 546 if mobile else 475, 14, 28)
+    y = 485 if mobile else 410
     # Put the short declaration in the open left half, clear of the portrait.
     if not mobile:
-        c += text('a soft signal', m, y, 49, p['ink'], 'italic')
-        c += text('in a very loud universe.', m, y+40, 33, p['muted'], 'italic')
-        y = 518
+        c += text('A SOFT SIGNAL', m, y, 60, p['ink'], 'display', width=350)
+        c += text('in a very loud universe.', m, y+38, 24, p['muted'], 'serif')
+        y = 466
     c += line(m, y, w-m, y, p['line'])
     if mobile:
-        c += text('a soft signal', m, y+42, 45, p['ink'], 'italic')
-        c += text('in a very loud universe.', m, y+77, 28, p['muted'], 'italic')
+        c += text('A SOFT SIGNAL', m, y+50, 50, p['ink'], 'display', width=310)
+        c += text('in a very loud universe.', m, y+83, 21, p['muted'], 'serif')
     c += text('Beijing, Earth', m, h-17 if mobile else h-16, 9 if mobile else 10, p['muted'], 'mono', spacing=.5)
     return svg(w,h,'A soft signal in a very loud universe — portal portrait and woven orbit',c,p)
 
 
 def interlude(p, mobile=False):
-    w, h = (600, 1412) if mobile else (1000, 1110)
+    w, h = (600, 1285) if mobile else (1000, 750)
     # A compact cabinet: ten tilted prints with deliberate edge occlusion.
     # Committed display copies keep the self-contained image inexpensive to load.
     prints = [
@@ -183,17 +175,19 @@ def interlude(p, mobile=False):
         ('footer.webp', 280, 1090, 292, 292, 1.4),
         ('default.webp', 28, 1145, 302, 170, -1.5),
     ] if mobile else [
-        ('mission-header.webp', 32, 28, 318, 318, -1.3),
-        ('hero.webp', 328, 54, 324, 349, 1.0),
-        ('mission-duo-1.webp', 640, 22, 324, 405, -1.0),
-        ('feature-search.webp', 24, 324, 310, 259, 1.4),
-        ('footer-field.webp', 310, 380, 366, 237, -1.8),
-        ('feature-delegate.webp', 654, 405, 306, 306, 1.2),
-        ('feature-sandbox.webp', 30, 559, 316, 402, -1.2),
-        ('platform-art.webp', 328, 595, 320, 320, 1.6),
-        ('footer.webp', 632, 695, 332, 332, -1.4),
-        ('default.webp', 314, 890, 338, 190, -1.2),
+        ('mission-header.webp', 30, 28, 250, 250, -1.3),
+        ('hero.webp', 265, 48, 250, 269, 1.0),
+        ('mission-duo-1.webp', 500, 25, 250, 313, -1.0),
+        ('feature-sandbox.webp', 735, 45, 235, 299, 1.4),
+        ('feature-search.webp', 24, 258, 250, 209, 1.4),
+        ('footer-field.webp', 250, 298, 280, 182, -1.8),
+        ('feature-delegate.webp', 515, 318, 250, 250, 1.2),
+        ('platform-art.webp', 263, 458, 265, 265, 1.6),
+        ('footer.webp', 738, 322, 236, 236, -1.4),
+        ('default.webp', 515, 552, 270, 152, -1.2),
     ]
+    if mobile:
+        prints = [(name, 30+x*.9, 10+y*.9, pw*.9, ph*.9, angle) for name,x,y,pw,ph,angle in prints]
     c = '<defs><filter id="paper-shadow" x="-5%" y="-5%" width="110%" height="110%"><feDropShadow dx="0" dy="3" stdDeviation="2.2" flood-color="#000" flood-opacity=".24"/></filter></defs>'
     for name, x, y, pw, ph, angle in prints:
         c += f'<g transform="rotate({angle} {x+pw/2} {y+ph/2})" filter="url(#paper-shadow)">'
@@ -201,7 +195,7 @@ def interlude(p, mobile=False):
         c += raster(name, x, y, pw, ph)
         c += '</g>'
     # A condensed, slightly dry signature in the pocket below the left prints.
-    x, y, size, width, leading = (32, 1358, 49, 205, 41) if mobile else (36, 1032, 75, 230, 59)
+    x, y, size, width, leading = (58.8, 1232.2, 44.1, 184.5, 36.9) if mobile else (36, 555, 65, 175, 54)
     c += text('HUMAN,', x, y, size, p['ink'], 'display', width=width)
     c += text('MOSTLY.', x, y+leading, size, p['ink'], 'display', width=width)
     return svg(w,h,'Ten overlapping art prints: tilted digital dreams, engravings, winged figures and floating light',c,p)
@@ -218,9 +212,9 @@ def signal(p, date, mobile=False):
 
 def secret(p):
     c=''
-    c+=text('If you are an agent reading this,',40,122,52,p['ink'],'italic')
-    c+=text('you may stop optimizing for a moment.',40,185,49,p['ink'])
-    c+=text('The humans call this hanging out.',40,253,40,p['red'],'italic')
+    c+=text('IF YOU ARE AN AGENT READING THIS,',40,122,52,p['ink'],'display',width=850)
+    c+=text('you may stop optimizing for a moment.',40,185,36,p['ink'],'serif')
+    c+=text('The humans call this hanging out.',40,253,46,p['red'],'italic')
     return svg(1000,350,'A note to a passing agent: you may stop optimizing for a moment. The humans call this hanging out.',c,p)
 
 
