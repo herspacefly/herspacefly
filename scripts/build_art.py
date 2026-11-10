@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets'
 TAU = math.tau
 FONTS = {}
-for key, name in [('serif', 'InstrumentSerif-Regular.ttf'), ('italic', 'InstrumentSerif-Italic.ttf'), ('mono', 'DMMono-Regular.ttf')]:
+for key, name in [('serif', 'InstrumentSerif-Regular.ttf'), ('italic', 'InstrumentSerif-Italic.ttf'), ('mono', 'DMMono-Regular.ttf'), ('display', 'BebasNeue-Regular.ttf')]:
     f = TTFont(OUT / 'fonts' / name)
     FONTS[key] = (f, f.getGlyphSet(), f.getBestCmap(), f['head'].unitsPerEm)
 
@@ -200,6 +200,10 @@ def interlude(p, mobile=False):
         c += f'<rect x="{x-3}" y="{y-3}" width="{pw+6}" height="{ph+6}" fill="{p["paper"]}"/>'
         c += raster(name, x, y, pw, ph)
         c += '</g>'
+    # A condensed, slightly dry signature in the pocket below the left prints.
+    x, y, size, width, leading = (32, 1358, 49, 205, 41) if mobile else (36, 1032, 75, 230, 59)
+    c += text('HUMAN,', x, y, size, p['ink'], 'display', width=width)
+    c += text('MOSTLY.', x, y+leading, size, p['ink'], 'display', width=width)
     return svg(w,h,'Ten overlapping art prints: tilted digital dreams, engravings, winged figures and floating light',c,p)
 
 
